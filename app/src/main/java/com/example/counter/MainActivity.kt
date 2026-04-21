@@ -33,7 +33,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            CounterTheme {
+            CounterTheme(dynamicColor = false) {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Counter(
                         modifier = Modifier.padding(innerPadding)
@@ -45,35 +45,43 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Counter( modifier: Modifier = Modifier) {
+fun Counter(modifier: Modifier = Modifier) {
 
-    var counterVal = remember{ mutableStateOf(0)}
+    var counterVal by rememberSaveable { mutableIntStateOf(0) }
 
-    Column(modifier.fillMaxSize(),verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
-
+    Column(
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
 
         Button(onClick = {
-            counterVal.value++
-
+            counterVal++
         }) {
-
-           Image(painterResource(android.R.drawable.arrow_up_float), "Up Arrow")
+            Image(
+                painter = painterResource(android.R.drawable.arrow_up_float),
+                contentDescription = "Up Arrow"
+            )
         }
+
         Text(
-            text = "0",
-            fontSize = 72.sp,
-            modifier = modifier
+            text = counterVal.toString(),
+            fontSize = 72.sp
         )
+
         Button(onClick = {
-            if (counterVal.value>0){
-                counterVal.value--
+            if (counterVal > 0) {
+                counterVal--
             }
         }) {
-
-            Image(painterResource(android.R.drawable.arrow_down_float), "Down Arrow")
+            Image(
+                painter = painterResource(android.R.drawable.arrow_down_float),
+                contentDescription = "Down Arrow"
+            )
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
